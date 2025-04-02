@@ -20,6 +20,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Start SQL Server 🗄️
+        run: |
+          docker run -d -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=pass@~rded123' -e 'MSSQL_PID=Express' -p 1433:1433 --name sqlserver -d mcr.microsoft.com/mssql/server:latest
+          sleep 5 # Wait for SQL Server to start
+
       - name: Install dependencies 📦
         run: dotnet restore
 
@@ -27,4 +32,16 @@ jobs:
         run: dotnet build -c Release --no-restore
 
       - name: Run tests 🧪
+        env:
+            ConnectionStrings__DefaultConnection: "Server=localhost,1433;Database=ci-cd_Test;User=sa;Password=pass@~rded123;"
         run: dotnet test
+
+    #   - name: Publish the project 📦
+    #     run: dotnet publish -c Release -o ./publish --no-build
+      
+    #   - name: Deploy to Azure Web App 🌐
+    #     uses: azure/webapps-deploy@v2
+    #     with:
+    #       app-name: 'your-app-name' # Replace with your Azure Web App name
+    #       publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+    #       package: ./publish
