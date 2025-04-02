@@ -17,7 +17,7 @@ namespace TestProject.Tests
 		{
 			// Create DbContext
 			var configuration = new ConfigurationBuilder()
-				.AddJsonFile("appsettings.json")
+				//.AddJsonFile("appsettings.json")
 				.AddEnvironmentVariables()
 				.Build();
 
